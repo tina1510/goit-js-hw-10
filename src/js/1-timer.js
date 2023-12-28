@@ -14,8 +14,8 @@ const dataMinutes = document.querySelector("[data-minutes]");
 const dataSeconds = document.querySelector("[data-seconds]");
 
 
-button.setAttribute('disabled', 'true');
-
+button.disabled = true;;
+let userSelectedDate;
 
 const options = {
     enableTime: true,
@@ -28,28 +28,23 @@ if (selectedDates[0].getTime() <= new Date().getTime()){
     izitoast.error({  
         message: 'Please choose a date in the future',
     });
-    button.setAttribute("disabled", true);
+    button.disabled = true;;
 
 }
 else {
-    button.removeAttribute('disabled');
+    button.disabled = false;
+    userSelectedDate = selectedDates[0];
 };
 
     },
   };
 
-  const calendar = flatpickr(input, options);
-
+flatpickr(input, options);
 
 button.addEventListener("click", () => {
-    const selectedDate = calendar.selectedDates[0];
-   const timerInterval = setInterval(updateTimer, 1000, selectedDate);
-
-
-   function updateTimer(selectedDate) {
+   const timerInterval = setInterval(() => {
     const now = new Date().getTime();
-    const difference = selectedDate.getTime() - now;
-
+    const difference = userSelectedDate.getTime() - now;
 
     if (difference <= 0) {
         clearInterval(timerInterval); 
@@ -66,9 +61,13 @@ button.addEventListener("click", () => {
     dataHours.textContent = addLeadingZero(hours);
     dataMinutes.textContent = addLeadingZero(minutes);
     dataSeconds.textContent = addLeadingZero(seconds);
-   }
+
+   }, 1000 );
+
    
 });
+
+
 function convertMs(ms) {
     // Number of milliseconds per unit of time
     const second = 1000;
